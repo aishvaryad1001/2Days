@@ -168,7 +168,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &140812771
 MonoBehaviour:
@@ -190,6 +190,75 @@ MonoBehaviour:
   m_InputActionsPerSecond: 10
   m_RepeatDelay: 0.5
   m_ForceModuleActive: 0
+--- !u!1 &158691745
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 158691746}
+  - component: {fileID: 158691747}
+  m_Layer: 0
+  m_Name: GUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &158691746
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158691745}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &158691747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158691745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 995c6f61919168e4699370c64911e7c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  layout: {fileID: 1286830300}
+  cardsIcon:
+  - {fileID: 21300000, guid: fd7f60d149fb211439f834f16bf8c9a7, type: 3}
+  - {fileID: 21300000, guid: 734877d4fa5015a468104ef9e6f0b3e0, type: 3}
+  - {fileID: 21300000, guid: de45f222496818d43b644d357e52b19e, type: 3}
+  - {fileID: 21300000, guid: 237b6a5dcb793dc43bbeab42ddf188cd, type: 3}
+  - {fileID: 21300000, guid: 4535ae816356f8a44ae91c92a677b5af, type: 3}
+  - {fileID: 21300000, guid: 246346e852d871e418681aaa1746706e, type: 3}
+  - {fileID: 21300000, guid: 34bb20834c485ce4e833fc5e53a5146c, type: 3}
+  - {fileID: 21300000, guid: 4b5973a94061dcb4182f8fb1dc082bcb, type: 3}
+  - {fileID: 21300000, guid: 07b53f21e8a7e254c9434966d1d1dd32, type: 3}
+  - {fileID: 21300000, guid: 65ae4ea651ee8b7438b8b1d9758407dc, type: 3}
+  - {fileID: 21300000, guid: 52d3c2250aac7a844a6f08ed077e5582, type: 3}
+  - {fileID: 21300000, guid: 425d1f07bab39ff488253f5a8169c899, type: 3}
+  - {fileID: 21300000, guid: fff9d5ba4d048494a898b4fa447ec885, type: 3}
+  - {fileID: 21300000, guid: 8f55229613648744aa7f77cf543e7fbb, type: 3}
+  - {fileID: 21300000, guid: 32cffd77c8a83f34291f7785d95d0e63, type: 3}
+  - {fileID: 21300000, guid: 54b618c68ba6dd7479439b584f4c6bd2, type: 3}
+  - {fileID: 21300000, guid: da31a530573ee20439e738939a9f970a, type: 3}
+  - {fileID: 21300000, guid: aa8dc7f173c4e2a42990fc43ce62c4bd, type: 3}
+  - {fileID: 21300000, guid: 277cc9d5e41c93d4aa72fe569284459b, type: 3}
+  - {fileID: 21300000, guid: 974af1780d9bc234fa7fbf8703db8532, type: 3}
+  - {fileID: 21300000, guid: e6929eba4d2a6fc4681703d5bf1a5d52, type: 3}
+  - {fileID: 21300000, guid: ef3e34e48d5cc474e81d7cc7ebf41d6e, type: 3}
+  - {fileID: 21300000, guid: 5c574dd2e47a0844ab0ab583a040c4fc, type: 3}
 --- !u!1 &444151788
 GameObject:
   m_ObjectHideFlags: 0
@@ -320,7 +389,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!114 &705507996
 MonoBehaviour:
@@ -416,7 +485,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &965724386
 GameObject:
@@ -492,7 +561,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f28993a6ecf2f2c46a3dc6ce0cd8062c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridItem: {fileID: 5787480291875908943, guid: cabaf58a7c81f7745b0b9fb953f75ff2, type: 3}
+  gridItem: {fileID: 6016074759913291278, guid: cabaf58a7c81f7745b0b9fb953f75ff2, type: 3}
   rows: 5
   columns: 6
   spacing: {x: 25, y: 25}
@@ -503,6 +572,7 @@ MonoBehaviour:
     m_Bottom: 0
   grid: {fileID: 965724388}
   rectTransform: {fileID: 965724387}
+  allCards: []
 --- !u!1 &1103279599
 GameObject:
   m_ObjectHideFlags: 0
@@ -598,7 +668,7 @@ RectTransform:
   m_Children:
   - {fileID: 1286830300}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

@@ -6,7 +6,7 @@ public class AutoGridFit : MonoBehaviour
 {
     public static AutoGridFit instance;
 
-    public GameObject gridItem;
+    public FlipTheCard gridItem;
     public int rows = 5;
     public int columns = 5;
 
@@ -16,6 +16,7 @@ public class AutoGridFit : MonoBehaviour
     public GridLayoutGroup grid;
     public RectTransform rectTransform;
 
+    public List<FlipTheCard> allCards = new List<FlipTheCard>();
 
     void Start()
     {
@@ -25,6 +26,7 @@ public class AutoGridFit : MonoBehaviour
 
     public void BuildGrid()
     {
+        // Clear old items
         if (transform.childCount > 0)
         {
             for (int i = transform.childCount - 1; i >= 0; i--)
@@ -35,12 +37,36 @@ public class AutoGridFit : MonoBehaviour
 
         int totalItems = rows * columns;
 
+        List<FlipTheCard> setCards = new List<FlipTheCard>();
         for (int i = 0; i < totalItems; i++)
         {
-            GameObject card = Instantiate(gridItem, transform);
+            FlipTheCard card = Instantiate(gridItem, transform);
             card.transform.localScale = Vector3.one;
+            setCards.Add(card);
+            allCards.Add(card);
         }
 
+        int count = setCards.Count / 2;
+        List<int> cardsIconList = new List<int>();
+
+        for (int i = 0; i < count; i++)
+        {
+            int chooseRandomCard = Random.Range(0, setCards.Count);
+            int index = Random.Range(0, InGameGUI.instance.cardsIcon.Length);
+
+            while (cardsIconList.Contains(index))
+                index = Random.Range(0, InGameGUI.instance.cardsIcon.Length);
+
+            cardsIconList.Add(index);
+            setCards[chooseRandomCard].item.sprite = InGameGUI.instance.cardsIcon[index];
+            setCards[chooseRandomCard].name = "Grid_" + index;
+            setCards.Remove(setCards[chooseRandomCard]);
+
+            chooseRandomCard = Random.Range(0, setCards.Count);
+            setCards[chooseRandomCard].item.sprite = InGameGUI.instance.cardsIcon[index];
+            setCards[chooseRandomCard].name = "Grid_" + index;
+            setCards.Remove(setCards[chooseRandomCard]);
+        }
     }
 
     void FitGrid()
