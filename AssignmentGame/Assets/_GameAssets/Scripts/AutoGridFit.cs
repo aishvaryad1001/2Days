@@ -59,11 +59,13 @@ public class AutoGridFit : MonoBehaviour
 
             cardsIconList.Add(index);
             setCards[chooseRandomCard].item.sprite = InGameGUI.instance.cardsIcon[index];
+            setCards[chooseRandomCard].cardIndex = index;
             setCards[chooseRandomCard].name = "Grid_" + index;
             setCards.Remove(setCards[chooseRandomCard]);
 
             chooseRandomCard = Random.Range(0, setCards.Count);
             setCards[chooseRandomCard].item.sprite = InGameGUI.instance.cardsIcon[index];
+            setCards[chooseRandomCard].cardIndex = index;
             setCards[chooseRandomCard].name = "Grid_" + index;
             setCards.Remove(setCards[chooseRandomCard]);
         }
