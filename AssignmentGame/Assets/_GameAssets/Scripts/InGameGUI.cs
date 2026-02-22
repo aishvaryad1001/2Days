@@ -9,7 +9,10 @@ public class InGameGUI : MonoBehaviour
 
     public RectTransform layout;
 
+    public int tapCount = 0;
     public Sprite[] cardsIcon;
+
+    public FlipTheCard prevSelected;
 
     private void Awake()
     {

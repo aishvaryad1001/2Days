@@ -159,8 +159,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45c28ffd21d23c741b791536e3bf3d31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isFlipped: 0
+  rect: {fileID: 7733313096037245556}
   bg: {fileID: 6792053478168436633}
   item: {fileID: 8443971169698723021}
+  cardIndex: 0
 --- !u!1 &6552431742315270455
 GameObject:
   m_ObjectHideFlags: 0
