@@ -55,9 +55,7 @@ public class AutoGridFit : MonoBehaviour
         {
 
             SaveManager.Instance.state.cards.Clear();
-
-            InGameGUI.instance.cardsMatched = allCards.Count;
-
+            allCards.Clear();
             InGameGUI.instance.score = 0;
             InGameGUI.instance.scoreT.text = InGameGUI.instance.score.ToString();
             BuildGrid();

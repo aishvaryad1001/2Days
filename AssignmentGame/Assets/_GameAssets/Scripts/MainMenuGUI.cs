@@ -164,6 +164,8 @@ public class MainMenuGUI : MonoBehaviour
 
     public void OnClickRestart()
     {
+        if (AutoGridFit.instance.isGridDisplayOver) return;
+
         if (SaveManager.Instance.state.isSound)
         {
             SoundManager.instance.gameSound.clip = SoundManager.instance.click;
@@ -178,6 +180,8 @@ public class MainMenuGUI : MonoBehaviour
 
         open = false;
         settings.Play("Settings_Close_Ingame");
+        SaveManager.Instance.state.cards.Clear();
+
         AutoGridFit.instance.SetGrid();
 
         gameState = GameState.INGAME;
