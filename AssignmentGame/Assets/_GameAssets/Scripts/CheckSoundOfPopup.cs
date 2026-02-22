@@ -8,7 +8,7 @@ public class CheckSoundOfPopup : MonoBehaviour
 
     private void OnEnable()
     {
-        if (SoundManager.instance.isSoundOn)
+        if (SaveManager.Instance.state.isSound)
             audioSource.Play();
     }
 }

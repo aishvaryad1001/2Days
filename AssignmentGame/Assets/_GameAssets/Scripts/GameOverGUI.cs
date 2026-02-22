@@ -21,13 +21,13 @@ public class GameOverGUI : MonoBehaviour
 
     public void OnClickHome()
     {
-        if (SoundManager.instance.isSoundOn)
+        if (SaveManager.Instance.state.isSound)
         {
             SoundManager.instance.gameSound.clip = SoundManager.instance.click;
             SoundManager.instance.gameSound.Play();
         }
 
-        if (SoundManager.instance.isVibratrionOn)
+        if (SaveManager.Instance.state.isVibration)
         {
             Vibration.Init();
             Vibration.VibratePop();

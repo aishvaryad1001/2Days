@@ -15,9 +15,6 @@ public class SoundManager : MonoBehaviour
     public Sprite vibrationOn;
     public Sprite vibrationOff;
 
-    public bool isSoundOn = false;
-    public bool isVibratrionOn = false;
-
     public AudioSource gameSound;
 
     public AudioClip click;
@@ -32,37 +29,17 @@ public class SoundManager : MonoBehaviour
 
     private void Start()
     {
-        if (PlayerPrefs.HasKey("SOUND"))
-        {
-            isSoundOn = bool.Parse(PlayerPrefs.GetString("SOUND"));
-        }
-        else
-        {
-            PlayerPrefs.SetString("SOUND", true.ToString());
-            isSoundOn = true;
-        }
-
-        if (PlayerPrefs.HasKey("VIBRATIONS"))
-        {
-            isVibratrionOn = bool.Parse(PlayerPrefs.GetString("VIBRATIONS"));
-        }
-        else
-        {
-            PlayerPrefs.SetString("VIBRATIONS", true.ToString());
-            isVibratrionOn = true;
-        }
-
         Setup();
     }
 
     public void Setup()
     {
-        if (isSoundOn)
+        if (SaveManager.Instance.state.isSound)
             soundImg.sprite = soundOn;
         else
             soundImg.sprite = soundOff;
 
-        if (isVibratrionOn)
+        if (SaveManager.Instance.state.isVibration)
             vibrationImg.sprite = vibrationOn;
         else
             vibrationImg.sprite = vibrationOff;
@@ -70,46 +47,49 @@ public class SoundManager : MonoBehaviour
 
     public void OnClickSound()
     {
-        if (isSoundOn)
+        if (SaveManager.Instance.state.isSound)
         {
             gameSound.clip = click;
             gameSound.Play();
         }
 
-        if (isVibratrionOn)
+        if (SaveManager.Instance.state.isVibration)
         {
             Vibration.Init();
             Vibration.VibratePop();
         }
 
-        isSoundOn = !isSoundOn;
-        if (isSoundOn)
+        SaveManager.Instance.state.isSound = !SaveManager.Instance.state.isSound;
+        if (SaveManager.Instance.state.isSound)
             soundImg.sprite = soundOn;
         else
             soundImg.sprite = soundOff;
 
-        PlayerPrefs.SetString("SOUND", isSoundOn.ToString());
     }
 
     public void OnClickVibration()
     {
-        if (isSoundOn)
+        if (SaveManager.Instance.state.isSound)
         {
             gameSound.clip = click;
             gameSound.Play();
         }
 
-        if (isVibratrionOn)
+        if (SaveManager.Instance.state.isVibration)
         {
             Vibration.Init();
             Vibration.VibratePop();
         }
 
-        isVibratrionOn = !isVibratrionOn;
-        if (isVibratrionOn)
+        SaveManager.Instance.state.isVibration = !SaveManager.Instance.state.isVibration;
+        if (SaveManager.Instance.state.isVibration)
             vibrationImg.sprite = vibrationOn;
         else
             vibrationImg.sprite = vibrationOff;
-        PlayerPrefs.SetString("VIBRATIONS", isVibratrionOn.ToString());
+    }
+
+    private void OnApplicationFocus(bool focus)
+    {
+        SaveManager.Instance.UpdateState();
     }
 }

@@ -17,6 +17,9 @@ public class MainMenuGUI : MonoBehaviour
     public GameState gameState;
     public GameObject mainMenuPanel;
 
+    public GameObject[] allBtns;
+    public GameObject resumeBtn;
+
     public Animator settings;
     public bool open = false;
 
@@ -30,80 +33,144 @@ public class MainMenuGUI : MonoBehaviour
         gameState = GameState.MAIN_MENU;
         mainMenuPanel.SetActive(true);
         settings.gameObject.SetActive(true);
+
+        if (SaveManager.Instance.state.cards.Count > 0)
+        {
+            for (int i = 0; i < allBtns.Length; i++)
+            {
+                allBtns[i].SetActive(false);
+            }
+            resumeBtn.SetActive(true);
+        }
+        else
+        {
+            for (int i = 0; i < allBtns.Length; i++)
+            {
+                allBtns[i].SetActive(true);
+            }
+            resumeBtn.SetActive(false);
+        }
     }
 
-    public void OnClickPlay_2x2()
+    public void OnClickResumeGame()
     {
-        if (SoundManager.instance.isSoundOn)
+        if (SaveManager.Instance.state.isSound)
         {
             SoundManager.instance.gameSound.clip = SoundManager.instance.click;
             SoundManager.instance.gameSound.Play();
         }
 
-        if (SoundManager.instance.isVibratrionOn)
+        if (SaveManager.Instance.state.isVibration)
         {
             Vibration.Init();
             Vibration.VibratePop();
         }
 
+        if (open)
+            settings.Play("Settings_Close");
+        open = false;
+        mainMenuPanel.SetActive(false);
+        InGameGUI.instance.inGamePanel.SetActive(true);
+
+        AutoGridFit.instance.rows = SaveManager.Instance.state.row;
+        AutoGridFit.instance.columns = SaveManager.Instance.state.column;
+
+        AutoGridFit.instance.SetGrid();
+
+        gameState = GameState.INGAME;
+    }
+
+    public void OnClickPlay_2x2()
+    {
+        if (SaveManager.Instance.state.isSound)
+        {
+            SoundManager.instance.gameSound.clip = SoundManager.instance.click;
+            SoundManager.instance.gameSound.Play();
+        }
+
+        if (SaveManager.Instance.state.isVibration)
+        {
+            Vibration.Init();
+            Vibration.VibratePop();
+        }
+
+        if (open)
+            settings.Play("Settings_Close");
+        open = false;
         mainMenuPanel.SetActive(false);
         InGameGUI.instance.inGamePanel.SetActive(true);
         AutoGridFit.instance.rows = 2;
         AutoGridFit.instance.columns = 2;
+        SaveManager.Instance.state.row = AutoGridFit.instance.rows;
+        SaveManager.Instance.state.column = AutoGridFit.instance.columns;
+        AutoGridFit.instance.SetGrid();
 
         gameState = GameState.INGAME;
     }
 
     public void OnClickPlay_2x3()
     {
-        if (SoundManager.instance.isSoundOn)
+        if (SaveManager.Instance.state.isSound)
         {
             SoundManager.instance.gameSound.clip = SoundManager.instance.click;
             SoundManager.instance.gameSound.Play();
         }
-        if (SoundManager.instance.isVibratrionOn)
+        if (SaveManager.Instance.state.isVibration)
         {
             Vibration.Init();
             Vibration.VibratePop();
         }
+
+        if (open)
+            settings.Play("Settings_Close");
+        open = false;
         mainMenuPanel.SetActive(false);
         InGameGUI.instance.inGamePanel.SetActive(true);
         AutoGridFit.instance.rows = 2;
         AutoGridFit.instance.columns = 3;
-
+        SaveManager.Instance.state.row = AutoGridFit.instance.rows;
+        SaveManager.Instance.state.column = AutoGridFit.instance.columns;
+        AutoGridFit.instance.SetGrid();
         gameState = GameState.INGAME;
     }
 
     public void OnClickPlay_5x6()
     {
-        if (SoundManager.instance.isSoundOn)
+        if (SaveManager.Instance.state.isSound)
         {
             SoundManager.instance.gameSound.clip = SoundManager.instance.click;
             SoundManager.instance.gameSound.Play();
         }
 
-        if (SoundManager.instance.isVibratrionOn)
+        if (SaveManager.Instance.state.isVibration)
         {
             Vibration.Init();
             Vibration.VibratePop();
         }
+
+        if (open)
+            settings.Play("Settings_Close");
+        open = false;
         mainMenuPanel.SetActive(false);
         InGameGUI.instance.inGamePanel.SetActive(true);
         AutoGridFit.instance.rows = 5;
         AutoGridFit.instance.columns = 6;
+        SaveManager.Instance.state.row = AutoGridFit.instance.rows;
+        SaveManager.Instance.state.column = AutoGridFit.instance.columns;
+        AutoGridFit.instance.SetGrid();
 
         gameState = GameState.INGAME;
     }
 
     public void OnClickRestart()
     {
-        if (SoundManager.instance.isSoundOn)
+        if (SaveManager.Instance.state.isSound)
         {
             SoundManager.instance.gameSound.clip = SoundManager.instance.click;
             SoundManager.instance.gameSound.Play();
         }
 
-        if (SoundManager.instance.isVibratrionOn)
+        if (SaveManager.Instance.state.isVibration)
         {
             Vibration.Init();
             Vibration.VibratePop();
@@ -118,13 +185,16 @@ public class MainMenuGUI : MonoBehaviour
 
     public void OnClickSettings()
     {
-        if (SoundManager.instance.isSoundOn)
+        if (AutoGridFit.instance != null)
+            if (AutoGridFit.instance.isCardMatching) return;
+
+        if (SaveManager.Instance.state.isSound)
         {
             SoundManager.instance.gameSound.clip = SoundManager.instance.click;
             SoundManager.instance.gameSound.Play();
         }
 
-        if (SoundManager.instance.isVibratrionOn)
+        if (SaveManager.Instance.state.isVibration)
         {
             Vibration.Init();
             Vibration.VibratePop();

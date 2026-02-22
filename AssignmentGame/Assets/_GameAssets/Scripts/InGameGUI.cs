@@ -44,8 +44,13 @@ public class InGameGUI : MonoBehaviour
 
     public void UpdateScore(int _scoreToAdd)
     {
-        score += _scoreToAdd;
+        if (currCombo > 1)
+            score += _scoreToAdd * currCombo;
+        else
+            score += _scoreToAdd;
+
         scoreT.text = score.ToString();
+        SaveManager.Instance.state.score = score;
     }
 
     public void CheckIfAllCardsPaired()
@@ -55,6 +60,8 @@ public class InGameGUI : MonoBehaviour
         {
             MainMenuGUI.instance.gameState = GameState.GAMEOVER;
             GameOverGUI.instance.gameOverPanel.SetActive(true);
+            SaveManager.Instance.state.cards.Clear();
+            SaveManager.Instance.state.score = 0;
         }
     }
     Sequence seq;

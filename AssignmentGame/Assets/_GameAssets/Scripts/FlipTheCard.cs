@@ -6,6 +6,7 @@ using DG.Tweening;
 
 public class FlipTheCard : MonoBehaviour
 {
+    public int index = 0;
     public bool isFlipped = false;
     public RectTransform rect;
 
@@ -26,18 +27,31 @@ public class FlipTheCard : MonoBehaviour
     private Coroutine flipCo;
     private FlipTheCard prevCardRef;
 
-    private void Start()
+    public void SetCardBase()
     {
-        isFlipped = false;
-        bg.gameObject.SetActive(true);
-        bgOutline = bg.GetComponent<Outline>();
-        bgColor = bg.color;
+        if (!SaveManager.Instance.state.cards[index].isMatched)
+        {
+            isFlipped = false;
+            bg.gameObject.SetActive(true);
+            bgOutline = bg.GetComponent<Outline>();
+            bgColor = bg.color;
+        }
+        else
+        {
+            isFlipped = true;
+            bg.gameObject.SetActive(false);
+        }
         item.gameObject.SetActive(false);
     }
 
     public void OnClickCard()
     {
-        if (isFlipped) return;
+        if (MainMenuGUI.instance.open)
+        {
+            MainMenuGUI.instance.open = false;
+            MainMenuGUI.instance.settings.Play("Settings_Close_Ingame");
+        }
+        if (isFlipped || AutoGridFit.instance.isCardMatching) return;
 
         isFlipped = true;
 
@@ -54,10 +68,10 @@ public class FlipTheCard : MonoBehaviour
         if (flipSeq != null)
             flipSeq.Kill();
 
-        if (SoundManager.instance.isSoundOn)
+        if (SaveManager.Instance.state.isSound)
             flipSound.Play();
 
-        if (SoundManager.instance.isVibratrionOn)
+        if (SaveManager.Instance.state.isVibration)
         {
             Vibration.Init();
             Vibration.VibratePeek();
@@ -76,11 +90,12 @@ public class FlipTheCard : MonoBehaviour
 
         if (prevCardRef != null && prevCardRef != this)
         {
-            StartCoroutine(ComparePair(prevCardRef, this));
+            compareCo = StartCoroutine(ComparePair(prevCardRef, this));
         }
         InGameGUI.instance.prevSelected = this;
     }
 
+    Coroutine compareCo;
     IEnumerator ComparePair(FlipTheCard card_1, FlipTheCard card_2)
     {
         yield return new WaitForSeconds(0.3f);
@@ -90,6 +105,7 @@ public class FlipTheCard : MonoBehaviour
 
         if (card_1.cardIndex == card_2.cardIndex)
         {
+            AutoGridFit.instance.isCardMatching = true;
             InGameGUI.instance.currCombo++;
             InGameGUI.instance.ShowComboFX();
 
@@ -111,7 +127,7 @@ public class FlipTheCard : MonoBehaviour
 
     public void CloseTheCard()
     {
-        if (SoundManager.instance.isSoundOn)
+        if (SaveManager.Instance.state.isSound)
         {
             SoundManager.instance.gameSound.clip = SoundManager.instance.wrongMatch;
             SoundManager.instance.gameSound.Play();
@@ -170,7 +186,7 @@ public class FlipTheCard : MonoBehaviour
 
     void MergeCards()
     {
-        if (SoundManager.instance.isSoundOn)
+        if (SaveManager.Instance.state.isSound)
         {
             SoundManager.instance.gameSound.clip = SoundManager.instance.rightMatch;
             SoundManager.instance.gameSound.Play();
@@ -192,6 +208,8 @@ public class FlipTheCard : MonoBehaviour
             InGameGUI.instance.UpdateScore(1);
             InGameGUI.instance.CheckIfAllCardsPaired();
             AutoGridFit.instance.matchedCards.Add(rect.gameObject);
+            AutoGridFit.instance.isCardMatching = false;
+            SaveManager.Instance.state.cards[index].isMatched = true;
         });
     }
 }

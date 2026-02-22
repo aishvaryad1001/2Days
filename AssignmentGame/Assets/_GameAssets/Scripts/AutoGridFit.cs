@@ -1,11 +1,21 @@
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 
+[Serializable]
+public class CardDetails
+{
+    public bool isMatched;
+    public int cardIconIndex;
+}
 
 public class AutoGridFit : MonoBehaviour
 {
     public static AutoGridFit instance;
+
+    public bool isCardMatching = false;
 
     public FlipTheCard gridItem;
     public int rows = 5;
@@ -25,28 +35,61 @@ public class AutoGridFit : MonoBehaviour
         instance = this;
     }
 
-    void Start()
-    {
-        SetGrid();
-    }
-
     public void SetGrid()
     {
         InGameGUI.instance.tapCount = 0;
         InGameGUI.instance.currCombo = -1;
-        InGameGUI.instance.cardsMatched = allCards.Count;
 
-        InGameGUI.instance.score = 0;
-        InGameGUI.instance.scoreT.text = InGameGUI.instance.score.ToString();
-        BuildGrid();
-        FitGrid();
-
-        if (matchedCards.Count > 0)
+        if (SaveManager.Instance.state.cards.Count > 0)
         {
-            for (int i = 0; i < matchedCards.Count; i++)
+            InGameGUI.instance.score = SaveManager.Instance.state.score;
+            InGameGUI.instance.scoreT.text = InGameGUI.instance.score.ToString();
+
+            InGameGUI.instance.cardsMatched = SaveManager.Instance.state.cards.Count;
+            RebuildGrid();
+            FitGrid();
+        }
+        else
+        {
+
+            SaveManager.Instance.state.cards.Clear();
+
+            InGameGUI.instance.cardsMatched = allCards.Count;
+
+            InGameGUI.instance.score = 0;
+            InGameGUI.instance.scoreT.text = InGameGUI.instance.score.ToString();
+            BuildGrid();
+            FitGrid();
+
+            if (matchedCards.Count > 0)
             {
-                Destroy(matchedCards[i]);
+                for (int i = 0; i < matchedCards.Count; i++)
+                {
+                    Destroy(matchedCards[i]);
+                }
             }
+        }
+    }
+
+    public void RebuildGrid()
+    {
+        for (int i = 0; i < SaveManager.Instance.state.cards.Count; i++)
+        {
+            FlipTheCard card = Instantiate(gridItem, transform);
+            card.index = i;
+            card.transform.localScale = Vector3.one;
+            allCards.Add(card);
+            card.cardIndex = SaveManager.Instance.state.cards[i].cardIconIndex;
+            card.name = "Grid_" + card.cardIndex;
+
+            if (SaveManager.Instance.state.cards[i].isMatched)
+            {
+                card.rect.gameObject.SetActive(false);
+                InGameGUI.instance.cardsMatched--;
+                matchedCards.Add(card.rect.gameObject);
+            }
+            card.item.sprite = InGameGUI.instance.cardsIcon[card.cardIndex];
+            card.SetCardBase();
         }
     }
 
@@ -67,7 +110,10 @@ public class AutoGridFit : MonoBehaviour
         for (int i = 0; i < totalItems; i++)
         {
             FlipTheCard card = Instantiate(gridItem, transform);
+            card.index = i;
             card.transform.localScale = Vector3.one;
+            SaveManager.Instance.state.cards.Add(new CardDetails());
+            card.SetCardBase();
             setCards.Add(card);
             allCards.Add(card);
         }
@@ -79,22 +125,26 @@ public class AutoGridFit : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            int chooseRandomCard = Random.Range(0, setCards.Count);
-            int index = Random.Range(0, InGameGUI.instance.cardsIcon.Length);
+            int chooseRandomCard = UnityEngine.Random.Range(0, setCards.Count);
+            int index = UnityEngine.Random.Range(0, InGameGUI.instance.cardsIcon.Length);
 
             while (cardsIconList.Contains(index))
-                index = Random.Range(0, InGameGUI.instance.cardsIcon.Length);
+                index = UnityEngine.Random.Range(0, InGameGUI.instance.cardsIcon.Length);
 
             cardsIconList.Add(index);
             setCards[chooseRandomCard].item.sprite = InGameGUI.instance.cardsIcon[index];
             setCards[chooseRandomCard].cardIndex = index;
             setCards[chooseRandomCard].name = "Grid_" + index;
+            SaveManager.Instance.state.cards[setCards[chooseRandomCard].index].cardIconIndex = index;
+            SaveManager.Instance.state.cards[chooseRandomCard].isMatched = false;
             setCards.Remove(setCards[chooseRandomCard]);
 
-            chooseRandomCard = Random.Range(0, setCards.Count);
+            chooseRandomCard = UnityEngine.Random.Range(0, setCards.Count);
             setCards[chooseRandomCard].item.sprite = InGameGUI.instance.cardsIcon[index];
             setCards[chooseRandomCard].cardIndex = index;
             setCards[chooseRandomCard].name = "Grid_" + index;
+            SaveManager.Instance.state.cards[setCards[chooseRandomCard].index].cardIconIndex = index;
+            SaveManager.Instance.state.cards[chooseRandomCard].isMatched = false;
             setCards.Remove(setCards[chooseRandomCard]);
         }
     }
