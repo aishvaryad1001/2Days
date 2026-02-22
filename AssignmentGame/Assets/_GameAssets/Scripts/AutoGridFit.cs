@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class AutoGridFit : MonoBehaviour
 {
     public static AutoGridFit instance;
@@ -17,11 +18,36 @@ public class AutoGridFit : MonoBehaviour
     public RectTransform rectTransform;
 
     public List<FlipTheCard> allCards = new List<FlipTheCard>();
+    public List<GameObject> matchedCards = new List<GameObject>();
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     void Start()
     {
+        SetGrid();
+    }
+
+    public void SetGrid()
+    {
+        InGameGUI.instance.tapCount = 0;
+        InGameGUI.instance.currCombo = -1;
+        InGameGUI.instance.cardsMatched = allCards.Count;
+
+        InGameGUI.instance.score = 0;
+        InGameGUI.instance.scoreT.text = InGameGUI.instance.score.ToString();
         BuildGrid();
         FitGrid();
+
+        if (matchedCards.Count > 0)
+        {
+            for (int i = 0; i < matchedCards.Count; i++)
+            {
+                Destroy(matchedCards[i]);
+            }
+        }
     }
 
     public void BuildGrid()
@@ -47,6 +73,8 @@ public class AutoGridFit : MonoBehaviour
         }
 
         int count = setCards.Count / 2;
+        InGameGUI.instance.cardsMatched = setCards.Count;
+
         List<int> cardsIconList = new List<int>();
 
         for (int i = 0; i < count; i++)
