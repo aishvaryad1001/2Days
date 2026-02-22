@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -16,6 +17,7 @@ public class AutoGridFit : MonoBehaviour
     public static AutoGridFit instance;
 
     public bool isCardMatching = false;
+    public bool isGridDisplayOver = false;
 
     public FlipTheCard gridItem;
     public int rows = 5;
@@ -87,10 +89,13 @@ public class AutoGridFit : MonoBehaviour
                 card.rect.gameObject.SetActive(false);
                 InGameGUI.instance.cardsMatched--;
                 matchedCards.Add(card.rect.gameObject);
+                card.isFlipped = true;
             }
             card.item.sprite = InGameGUI.instance.cardsIcon[card.cardIndex];
             card.SetCardBase();
         }
+
+        ShowFullGridOnStartOfGame();
     }
 
     public void BuildGrid()
@@ -147,6 +152,40 @@ public class AutoGridFit : MonoBehaviour
             SaveManager.Instance.state.cards[chooseRandomCard].isMatched = false;
             setCards.Remove(setCards[chooseRandomCard]);
         }
+
+        ShowFullGridOnStartOfGame();
+    }
+
+    public void ShowFullGridOnStartOfGame()
+    {
+        isGridDisplayOver = true;
+        StartCoroutine(ShowFullGridOnStartOfGameCo());
+    }
+
+    IEnumerator ShowFullGridOnStartOfGameCo()
+    {
+        for (int i = 0; i < allCards.Count; i++)
+        {
+            if (!SaveManager.Instance.state.cards[i].isMatched)
+            {
+                allCards[i].FlipCard();
+            }
+        }
+        var delay = allCards.Count * 0.1f;
+        if (delay <= 1)
+            delay = 1;
+
+        yield return new WaitForSeconds(delay);
+
+        for (int i = 0; i < allCards.Count; i++)
+        {
+            if (!SaveManager.Instance.state.cards[i].isMatched)
+            {
+                allCards[i].CloseTheCard();
+            }
+        }
+
+        isGridDisplayOver = false;
     }
 
     void FitGrid()

@@ -51,7 +51,17 @@ public class FlipTheCard : MonoBehaviour
             MainMenuGUI.instance.open = false;
             MainMenuGUI.instance.settings.Play("Settings_Close_Ingame");
         }
-        if (isFlipped || AutoGridFit.instance.isCardMatching) return;
+
+        if (isFlipped || AutoGridFit.instance.isCardMatching || AutoGridFit.instance.isGridDisplayOver) return;
+
+        if (SaveManager.Instance.state.isSound)
+            flipSound.Play();
+
+        if (SaveManager.Instance.state.isVibration)
+        {
+            Vibration.Init();
+            Vibration.VibratePeek();
+        }
 
         isFlipped = true;
 
@@ -65,17 +75,18 @@ public class FlipTheCard : MonoBehaviour
 
         prevCardRef = InGameGUI.instance.prevSelected;
 
+        FlipCard();
+        if (prevCardRef != null && prevCardRef != this)
+        {
+            StartCoroutine(ComparePair(prevCardRef, this));
+        }
+        InGameGUI.instance.prevSelected = this;
+    }
+
+    public void FlipCard()
+    {
         if (flipSeq != null)
             flipSeq.Kill();
-
-        if (SaveManager.Instance.state.isSound)
-            flipSound.Play();
-
-        if (SaveManager.Instance.state.isVibration)
-        {
-            Vibration.Init();
-            Vibration.VibratePeek();
-        }
 
         flipSeq = DOTween.Sequence();
         flipSeq.Append(transform.DOLocalRotate(new Vector3(0, 90, 0), 0.1f).SetEase(Ease.InQuad));
@@ -86,16 +97,9 @@ public class FlipTheCard : MonoBehaviour
             bgOutline.effectColor = bgColor;
         });
         flipSeq.Append(transform.DOLocalRotate(new Vector3(0, 180, 0), 0.1f).SetEase(Ease.OutQuad));
-        flipSeq.Append(transform.DOPunchScale(Vector3.one * 0.07f, 0.1f));//.OnComplete(() => CheckBeforeCardClose(isCardMatched));
-
-        if (prevCardRef != null && prevCardRef != this)
-        {
-            compareCo = StartCoroutine(ComparePair(prevCardRef, this));
-        }
-        InGameGUI.instance.prevSelected = this;
+        flipSeq.Append(transform.DOPunchScale(Vector3.one * 0.07f, 0.1f));
     }
 
-    Coroutine compareCo;
     IEnumerator ComparePair(FlipTheCard card_1, FlipTheCard card_2)
     {
         yield return new WaitForSeconds(0.3f);
@@ -176,12 +180,17 @@ public class FlipTheCard : MonoBehaviour
         Vector2 center = InGameGUI.instance.CenterPosition();
         float offsetX = 250f;
 
+        float targetSize = Mathf.Min(Screen.width, Screen.height) * 0.35f;
+        float currentSize = rect.rect.width;
+        float dynamicScale = targetSize / currentSize;
+
+        dynamicScale = Mathf.Clamp(dynamicScale, 0.8f, 1.8f);
         Vector2 targetPos = isPrevCard
             ? center + Vector2.right * offsetX
             : center + Vector2.left * offsetX;
 
         seq.Join(rect.DOAnchorPos(targetPos, 0.35f).SetEase(Ease.OutBack));
-        seq.Join(rect.DOScale(originalScale * 1.8f, 0.35f).SetEase(Ease.OutBack));
+        seq.Join(rect.DOScale(originalScale * dynamicScale, 0.35f).SetEase(Ease.OutBack));
     }
 
     void MergeCards()
